@@ -5,8 +5,8 @@ import Providers from '@/components/Providers'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'PromptGrid',
-  description: 'Powerful AI-powered SaaS platform',
+  title: 'PromptGrid - AI-Powered Conversations Made Simple',
+  description: 'Access GPT-4, Claude, and more AI models through one unified platform. Build intelligent applications with powerful APIs and beautiful interfaces.',
 }
 
 export default function RootLayout({
