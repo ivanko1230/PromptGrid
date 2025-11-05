@@ -15,6 +15,18 @@ A modern, full-stack AI-powered SaaS platform for intelligent conversations and 
 - 📱 **Modern UI** - Beautiful, responsive design with Tailwind CSS
 - 🗄️ **Database** - SQLite (development) / PostgreSQL (production) with Prisma ORM
 - 🔒 **Type Safety** - Full TypeScript support
+- 📝 **Prompt Templates** - Create, manage, and share reusable prompt templates
+- 💾 **Conversation History** - Save and manage chat conversations
+- 🔔 **Webhooks** - Real-time event notifications for integrations
+- 📚 **API Documentation** - Comprehensive API documentation page
+- 💰 **Cost Estimation** - Real-time cost preview before API calls
+- ⚠️ **Usage Alerts** - Get notified when usage thresholds are reached
+- 🚦 **Rate Limiting** - Plan-based rate limiting for API protection
+- 📥 **Export Functionality** - Export analytics and conversations (CSV, JSON, Markdown)
+- 🔄 **Batch Processing** - Process multiple prompts simultaneously
+- 🔍 **Search** - Search through conversations and templates
+- ⚖️ **Model Comparison** - Compare responses from different AI models side-by-side
+- ⭐ **Favorites** - Bookmark favorite templates and conversations
 
 ## Tech Stack
 
@@ -85,8 +97,19 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   ├── api/              # API routes
 │   │   ├── auth/         # Authentication endpoints
 │   │   ├── ai/           # AI chat endpoints
+│   │   │   ├── chat/     # Chat endpoint
+│   │   │   ├── batch/    # Batch processing
+│   │   │   └── estimate-cost/ # Cost estimation
 │   │   ├── api-keys/     # API key management
 │   │   ├── analytics/    # Analytics data endpoints
+│   │   │   └── export/   # Analytics export
+│   │   ├── conversations/ # Conversation management
+│   │   │   └── export/   # Conversation export
+│   │   ├── prompt-templates/ # Prompt template management
+│   │   ├── usage-alerts/ # Usage alerts management
+│   │   ├── webhooks/     # Webhook management
+│   │   ├── favorites/    # Favorites/bookmarks
+│   │   ├── search/       # Search functionality
 │   │   ├── subscriptions/ # Subscription endpoints
 │   │   └── v1/           # Public API endpoints
 │   ├── auth/             # Authentication pages
@@ -96,14 +119,26 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 │   │   ├── api-keys/     # API key management
 │   │   ├── usage-history/ # Usage history logs
 │   │   ├── settings/     # User settings
-│   │   └── admin/        # Admin dashboard
-│   └── page.tsx          # Home page
+│   │   ├── admin/        # Admin dashboard
+│   │   ├── templates/    # Prompt templates
+│   │   ├── conversations/ # Conversation history
+│   │   ├── webhooks/     # Webhook management
+│   │   ├── api-docs/     # API documentation
+│   │   ├── alerts/       # Usage alerts
+│   │   ├── search/       # Search page
+│   │   └── compare/      # Model comparison
+│   └── page.tsx          # Home page (landing page)
 ├── components/           # React components
 ├── lib/                  # Utility functions
 │   ├── ai.ts            # AI integration
 │   ├── auth.ts          # Auth configuration
 │   ├── api-keys.ts      # API key utilities
-│   └── prisma.ts        # Prisma client
+│   ├── prisma.ts        # Prisma client
+│   ├── cost-estimation.ts # Cost estimation utilities
+│   ├── usage-alerts.ts  # Usage alert checking
+│   ├── webhooks.ts      # Webhook triggering
+│   ├── middleware.ts    # Rate limiting middleware
+│   └── rate-limit.ts    # Rate limiting logic
 ├── prisma/
 │   └── schema.prisma    # Database schema
 └── types/               # TypeScript type definitions
@@ -131,6 +166,8 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Provider distribution visualization
 - Monthly usage summaries
 - Cost tracking and reporting
+- Export analytics data in CSV or JSON format
+- Detailed usage breakdowns
 
 ### API Key Management
 - Create and manage API keys for programmatic access
@@ -143,6 +180,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Filter by provider, model, date
 - Cost breakdown per request
 - Export capabilities
+- Search functionality
 
 ### Admin Dashboard
 - Platform-wide statistics
@@ -156,11 +194,83 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - Usage limits based on subscription tier
 - Webhook handling for subscription updates
 
-### Analytics
-- Usage statistics dashboard
-- Token and cost tracking
-- Monthly usage reports
-- Provider analytics
+### Rate Limiting & API Protection
+- Plan-based rate limiting (per-minute and per-hour limits)
+- Free: 10/min, 100/hour
+- Pro: 60/min, 1,000/hour
+- Enterprise: 300/min, 10,000/hour
+- Rate limit headers in API responses
+- Protection for both internal and external API endpoints
+
+### Webhooks
+- Create webhooks for real-time event notifications
+- Event types: usage.created, conversation.saved, api_key.created, or all events
+- HMAC SHA-256 signature verification
+- Enable/disable webhooks dynamically
+- Track last triggered timestamp
+
+### Usage Alerts
+- Set alerts for monthly requests, tokens, or cost thresholds
+- Visual notifications in chat interface
+- Automatic alert checking after each API call
+- Prevent duplicate alerts (once per month)
+- Track alert history
+
+### Cost Estimation
+- Real-time cost estimation before API calls
+- Model-specific pricing accuracy
+- Visual cost indicator in chat interface
+- Detailed breakdown (input/output tokens)
+- Expandable cost details panel
+
+### API Documentation
+- Comprehensive API documentation page
+- Authentication examples
+- Request/response examples
+- Rate limit documentation
+- Error response examples
+- Available models list
+
+### Prompt Templates
+- Create and manage reusable prompt templates
+- Public and private templates
+- Category organization (general, coding, writing, analysis, creative)
+- Usage tracking for public templates
+- Share templates with the community
+
+### Conversation History
+- Save and manage chat conversations
+- View conversation history with titles and metadata
+- Load previous conversations
+- Export conversations in JSON or Markdown format
+- Search through conversation history
+
+### Batch Processing
+- Process multiple prompts simultaneously (up to 10 per batch)
+- Parallel execution for faster processing
+- Individual success/failure tracking per request
+- Summary with total cost and tokens
+- Automatic usage tracking for each request
+
+### Search Functionality
+- Search through conversations and templates
+- Real-time search with debouncing
+- Filter by type (all, conversations, templates)
+- Search across titles, content, and descriptions
+- Quick access to relevant content
+
+### Model Comparison
+- Compare up to 4 models side-by-side
+- Select models from OpenAI and Anthropic
+- Same prompt sent to all selected models
+- Compare responses, tokens, and costs
+- Visual grid layout for easy comparison
+
+### Favorites System
+- Bookmark favorite templates and conversations
+- Quick access to frequently used content
+- Prevent duplicate favorites
+- Track favorite creation time
 
 ## Database Schema
 
@@ -168,6 +278,11 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 - **Subscription**: User subscription plans and billing information
 - **AIUsage**: AI API usage tracking and costs
 - **ApiKey**: API keys for programmatic access
+- **Conversation**: Saved chat conversations with messages
+- **PromptTemplate**: Reusable prompt templates (public/private)
+- **Webhook**: Webhook configurations for event notifications
+- **UsageAlert**: Usage threshold alerts for users
+- **Favorite**: Favorites/bookmarks for templates and conversations
 - **Account/Session**: NextAuth session management
 
 ## Development
@@ -216,6 +331,58 @@ curl -X POST http://localhost:3000/api/v1/chat \
     "temperature": 0.7
   }'
 ```
+
+### Batch Processing
+
+Process multiple prompts simultaneously:
+
+```bash
+curl -X POST http://localhost:3000/api/ai/batch \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "requests": [
+      {
+        "provider": "openai",
+        "model": "gpt-3.5-turbo",
+        "messages": [{"role": "user", "content": "Hello!"}]
+      },
+      {
+        "provider": "anthropic",
+        "model": "claude-3-haiku",
+        "messages": [{"role": "user", "content": "Hi!"}]
+      }
+    ]
+  }'
+```
+
+### Cost Estimation
+
+Estimate cost before making API calls:
+
+```bash
+curl -X POST http://localhost:3000/api/ai/estimate-cost \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "provider": "openai",
+    "model": "gpt-4",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "maxTokens": 1000
+  }'
+```
+
+### Rate Limits
+
+Rate limits are enforced per subscription plan:
+- **Free**: 10 requests/minute, 100 requests/hour
+- **Pro**: 60 requests/minute, 1,000 requests/hour
+- **Enterprise**: 300 requests/minute, 10,000 requests/hour
+
+Rate limit information is included in response headers:
+- `X-RateLimit-Limit`: Maximum requests allowed
+- `X-RateLimit-Remaining`: Remaining requests
+- `X-RateLimit-Reset`: Unix timestamp when limit resets
 
 ## Admin Access
 
