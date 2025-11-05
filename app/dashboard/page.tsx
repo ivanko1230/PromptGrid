@@ -56,6 +56,21 @@ export default async function DashboardPage() {
               <Link href="/dashboard/analytics" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                 Analytics
               </Link>
+              <Link href="/dashboard/templates" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                Templates
+              </Link>
+              <Link href="/dashboard/conversations" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                Conversations
+              </Link>
+              <Link href="/dashboard/webhooks" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                Webhooks
+              </Link>
+              <Link href="/dashboard/api-docs" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                API Docs
+              </Link>
+              <Link href="/dashboard/alerts" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                Alerts
+              </Link>
             </div>
           </div>
         </div>

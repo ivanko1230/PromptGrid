@@ -5,6 +5,8 @@ import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { rateLimitMiddleware } from '@/lib/middleware'
+import { triggerWebhooks } from '@/lib/webhooks'
+import { checkUsageAlerts } from '@/lib/usage-alerts'
 
 const aiRequestSchema = z.object({
   provider: z.enum(['openai', 'anthropic']),
@@ -104,7 +106,7 @@ export async function POST(request: Request) {
     })
 
     // Track usage
-    await prisma.aIUsage.create({
+    const usage = await prisma.aIUsage.create({
       data: {
         userId: session.user.id,
         provider: data.provider,
@@ -119,10 +121,28 @@ export async function POST(request: Request) {
       },
     })
 
+    // Trigger webhook for usage event
+    await triggerWebhooks(session.user.id, 'usage.created', {
+      usageId: usage.id,
+      tokensUsed: response.tokensUsed,
+      cost: response.cost,
+      provider: data.provider,
+      model: data.model,
+    })
+
+    // Check usage alerts
+    const triggeredAlerts = await checkUsageAlerts(session.user.id)
+
     return NextResponse.json({
       content: response.content,
       tokensUsed: response.tokensUsed,
       cost: response.cost,
+      alerts: triggeredAlerts.map(({ alert, currentValue }) => ({
+        type: alert.type,
+        threshold: alert.threshold,
+        currentValue,
+        message: `Usage alert: ${alert.type} reached ${currentValue} (threshold: ${alert.threshold})`,
+      })),
     })
   } catch (error) {
     if (error instanceof z.ZodError) {
