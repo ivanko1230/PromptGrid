@@ -71,6 +71,12 @@ export default async function DashboardPage() {
               <Link href="/dashboard/alerts" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
                 Alerts
               </Link>
+              <Link href="/dashboard/search" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                Search
+              </Link>
+              <Link href="/dashboard/compare" className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+                Compare
+              </Link>
             </div>
           </div>
         </div>

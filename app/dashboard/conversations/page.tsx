@@ -48,23 +48,40 @@ export default async function ConversationsPage() {
             </div>
           ) : (
             conversations.map((conversation) => (
-              <Link
+              <div
                 key={conversation.id}
-                href={`/dashboard/chat?conversation=${conversation.id}`}
                 className="bg-white dark:bg-gray-800 rounded-lg shadow p-4 hover:shadow-lg transition"
               >
-                <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
-                  {conversation.title}
-                </h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {conversation.provider && conversation.model
-                    ? `${conversation.provider} / ${conversation.model}`
-                    : 'No model info'}
-                </p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
-                  {new Date(conversation.updatedAt).toLocaleDateString()}
-                </p>
-              </Link>
+                <Link href={`/dashboard/chat?conversation=${conversation.id}`}>
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
+                    {conversation.title}
+                  </h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
+                    {conversation.provider && conversation.model
+                      ? `${conversation.provider} / ${conversation.model}`
+                      : 'No model info'}
+                  </p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
+                    {new Date(conversation.updatedAt).toLocaleDateString()}
+                  </p>
+                </Link>
+                <div className="mt-3 flex gap-2">
+                  <a
+                    href={`/api/conversations/export?id=${conversation.id}&format=json`}
+                    download
+                    className="text-xs px-2 py-1 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-200 dark:hover:bg-blue-800"
+                  >
+                    Export JSON
+                  </a>
+                  <a
+                    href={`/api/conversations/export?id=${conversation.id}&format=markdown`}
+                    download
+                    className="text-xs px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded hover:bg-green-200 dark:hover:bg-green-800"
+                  >
+                    Export MD
+                  </a>
+                </div>
+              </div>
             ))
           )}
         </div>
