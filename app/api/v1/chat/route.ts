@@ -3,6 +3,7 @@ import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { hashApiKey } from '@/lib/api-keys'
+import { rateLimitMiddleware } from '@/lib/middleware'
 
 export async function POST(request: Request) {
   try {
@@ -39,6 +40,17 @@ export async function POST(request: Request) {
         { error: 'No subscription found' },
         { status: 400 }
       )
+    }
+
+    // Apply rate limiting with API key identifier
+    const rateLimitResponse = await rateLimitMiddleware(
+      request,
+      apiKeyRecord.userId,
+      subscription.plan,
+      apiKey
+    )
+    if (rateLimitResponse) {
+      return rateLimitResponse
     }
 
     const body = await request.json()

@@ -73,9 +73,15 @@ export default function AnalyticsPage() {
       </nav>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-          Analytics
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Analytics
+          </h1>
+          <div className="flex gap-2">
+            <ExportButton format="csv" />
+            <ExportButton format="json" />
+          </div>
+        </div>
 
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -176,5 +182,41 @@ export default function AnalyticsPage() {
         )}
       </main>
     </div>
+  )
+}
+
+function ExportButton({ format }: { format: 'csv' | 'json' }) {
+  const handleExport = async () => {
+    try {
+      const response = await fetch(`/api/analytics/export?format=${format}&days=30`)
+      if (!response.ok) {
+        throw new Error('Export failed')
+      }
+
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `promptgrid-analytics-${new Date().toISOString().split('T')[0]}.${format}`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error('Export error:', error)
+      alert('Failed to export analytics data')
+    }
+  }
+
+  return (
+    <button
+      onClick={handleExport}
+      className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      Export {format.toUpperCase()}
+    </button>
   )
 }

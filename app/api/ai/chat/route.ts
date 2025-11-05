@@ -4,6 +4,7 @@ import { callAI } from '@/lib/ai'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
+import { rateLimitMiddleware } from '@/lib/middleware'
 
 const aiRequestSchema = z.object({
   provider: z.enum(['openai', 'anthropic']),
@@ -38,6 +39,16 @@ export async function POST(request: Request) {
         { error: 'No subscription found' },
         { status: 400 }
       )
+    }
+
+    // Apply rate limiting
+    const rateLimitResponse = await rateLimitMiddleware(
+      request,
+      session.user.id,
+      subscription.plan
+    )
+    if (rateLimitResponse) {
+      return rateLimitResponse
     }
 
     // Check usage limits based on plan
